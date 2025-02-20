@@ -1,0 +1,15 @@
+{
+  "name": "broadcast-erc",
+  "version": "0.0.1",
+  "repository": "https://github.com/OffchainLabs/broadcast-erc.git",
+  "scripts": {
+    "lint": "forge fmt --check",
+    "format": "forge fmt",
+    "build": "forge build",
+    "clean": "forge clean",
+    "build-standard": "./scripts/md-embed.bash ./standard/README-template.md ./standard/README.md"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0"
+  }
+}
