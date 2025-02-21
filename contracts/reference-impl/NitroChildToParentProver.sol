@@ -67,6 +67,8 @@ contract NitroChildToParentProver is IBlockHashProver {
         uint256 expectedSlot = uint256(keccak256(abi.encode(blockNumber, blockHashSlot)));
         require(blockHashSlot == expectedSlot, "unexpected slot");
 
+        require(blockHash != bytes32(0), "block hash not found");
+
         return blockHash;
     }
 

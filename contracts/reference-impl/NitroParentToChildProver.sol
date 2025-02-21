@@ -26,7 +26,8 @@ contract NitroParentToChildProver is IBlockHashProver {
     function getTargetBlockHash(bytes memory input) external view returns (bytes32 targetBlockHash) {
         require(block.chainid == homeChainId, "must be on home chain");
         (bytes32 sendRoot) = abi.decode(input, (bytes32));
-        return IOutbox(outbox).roots(sendRoot);
+        targetBlockHash = IOutbox(outbox).roots(sendRoot);
+        require(targetBlockHash != bytes32(0), "block hash not found");
     }
 
     /// @notice Use a nitro parent chain's block hash and proof to get the block hash of the nitro chain.
@@ -66,6 +67,8 @@ contract NitroParentToChildProver is IBlockHashProver {
         // make sure the slot corresponds to the roots map
         uint256 expectedSlot = uint256(keccak256(abi.encode(sendRoot, rootsSlot)));
         require(blockHashSlot == expectedSlot, "unexpected slot");
+
+        require(blockHash != bytes32(0), "block hash not found");
 
         return blockHash;
     }
