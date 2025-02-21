@@ -1,8 +1,8 @@
 # Broadcast Standard and Reference Implementation
 
-Link to ERC: TODO
+Link to ERC: https://github.com/ethereum/ERCs/pull/897
 
-Link to Ethereum Magicians: TODO
+Link to Ethereum Magicians: https://ethereum-magicians.org/t/new-erc-cross-chain-broadcaster/22927
 
 This repository contains text and contracts related to ERC-0000.
 
