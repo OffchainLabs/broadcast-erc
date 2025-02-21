@@ -3,7 +3,7 @@ eip: XXXX
 title: Crosschain Broadcaster
 description: Trustless crosschain storage-based message broadcasting for rollups.
 author: Henry Arneson (@godzillaba), Chris Buckland (@yahgwai)
-discussions-to: https://ethereum-magicians.org/t/
+discussions-to: https://ethereum-magicians.org/t/new-erc-cross-chain-broadcaster/22927
 status: Draft
 type: Standards Track
 category: ERC
