@@ -478,4 +478,4 @@ Copyright and related rights waived via [CC0](/LICENSE).
 ## Citation
 Please cite this document as:
 
-TODO
+Henry Arneson (@godzillaba), Chris Buckland (@yahgwai), "ERC-XXXX: Crosschain Broadcaster [DRAFT]," Ethereum Improvement Proposals, no. XXXX, February 2025. [Online serial]. Available: https://eips.ethereum.org/EIPS/eip-XXXX.
