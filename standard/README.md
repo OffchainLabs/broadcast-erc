@@ -75,6 +75,12 @@ interface IBroadcaster {
     ///         MUST store block.timestamp in slot keccak(message, msg.sender).
     /// @param  message The message to broadcast.
     function broadcastMessage(bytes32 message) external;
+
+    /// @notice Checks if a message has been broadcast by a publisher.
+    /// @param  message The message to check.
+    /// @param  publisher The address of the publisher.
+    /// @return True if the message has been broadcast by the publisher, false otherwise.
+    function hasBroadcasted(bytes32 message, address publisher) external view returns (bool);
 }
 ```
 

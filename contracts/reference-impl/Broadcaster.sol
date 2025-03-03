@@ -5,6 +5,7 @@ import {IBroadcaster} from "../standard/interfaces/IBroadcaster.sol";
 import "../standard/Constants.sol";
 
 contract Broadcaster is IBroadcaster {
+    /// @inheritdoc IBroadcaster
     function broadcastMessage(bytes32 message) external {
         // calculate the storage slot for the message
         uint256 slot = _messageSlot(message, msg.sender);
@@ -18,7 +19,7 @@ contract Broadcaster is IBroadcaster {
         emit MessageBroadcast(message, msg.sender);
     }
 
-    /// @notice Not required by the standard, but useful for visibility. TODO: consider adding to the standard.
+    /// @inheritdoc IBroadcaster
     function hasBroadcasted(bytes32 message, address publisher) external view returns (bool) {
         return _sload(_messageSlot(message, publisher)) != 0;
     }
