@@ -34,9 +34,10 @@ contract Minter {
     }
 
     /// @notice Mint the tokens when a message is received.
-    function mintTokens(IReceiver.RemoteReadArgs calldata broadcasterReadArgs, BurnMessage calldata messageData)
-        external
-    {
+    function mintTokens(
+        IReceiver.RemoteReadStorageSlotArgs calldata broadcasterReadArgs,
+        BurnMessage calldata messageData
+    ) external {
         // calculate the message from the data
         bytes32 message = keccak256(abi.encode(messageData));
 

@@ -247,31 +247,43 @@ The calls in Figure 6 perform the following operations:
 ```solidity
 /// @notice Reads messages from a broadcaster.
 interface IReceiver {
-    /// @notice Arguments required to read storage of an account on a remote chain.
-    /// @dev    The storage proof is always for a single slot, if the proof is for multiple slots the IReceiver MUST revert
-    /// @param  route The home chain addresses of the BlockHashProverPointers along the route to the remote chain.
-    /// @param  bhpInputs The inputs to the BlockHashProver / BlockHashProverCopies.
-    /// @param  storageProof Proof passed to the last BlockHashProver / BlockHashProverCopy
-    ///                      to verify a storage slot given a target block hash.
-    struct RemoteReadArgs {
+    // todo: natspec
+    struct RemoteReadBlockHashArgs {
         address[] route;
         bytes[] bhpInputs;
+    }
+
+    // todo: natspec
+    struct RemoteReadStorageSlotArgs {
+        RemoteReadBlockHashArgs blockHashArgs;
         bytes storageProof;
     }
 
     /// @notice Reads a broadcast message from a remote chain.
-    /// @param  broadcasterReadArgs A RemoteReadArgs object:
+    /// @param  broadcasterReadArgs A RemoteReadStorageSlotArgs object:
     ///         - The route points to the broadcasting chain
-    ///         - The account proof is for the broadcaster's account
-    ///         - The storage proof is for the message slot
+    ///         - The storage proof is for the broadcaster's message slot
     /// @param  message The message to read.
     /// @param  publisher The address of the publisher who broadcast the message.
     /// @return broadcasterId The broadcaster's unique identifier.
     /// @return timestamp The timestamp when the message was broadcast.
-    function verifyBroadcastMessage(RemoteReadArgs calldata broadcasterReadArgs, bytes32 message, address publisher)
+    function verifyBroadcastMessage(
+        RemoteReadStorageSlotArgs calldata broadcasterReadArgs,
+        bytes32 message,
+        address publisher
+    ) external view returns (bytes32 broadcasterId, uint256 timestamp);
+
+    // todo: natspec
+    function verifyRemoteSlot(RemoteReadStorageSlotArgs calldata readArgs)
         external
         view
-        returns (bytes32 broadcasterId, uint256 timestamp);
+        returns (bytes32 remoteAccountId, uint256 slot, bytes32 slotValue);
+
+    // todo: natspec
+    function verifyRemoteBlockHash(RemoteReadBlockHashArgs calldata readArgs)
+        external
+        view
+        returns (bytes32 routeId, bytes32 blockHash);
 
     /// @notice Updates the block hash prover copy in storage.
     ///         Checks that BlockHashProverCopy has the same code hash as stored in the BlockHashProverPointer
@@ -282,7 +294,7 @@ interface IReceiver {
     ///         - The storage proof is for the BLOCK_HASH_PROVER_POINTER_SLOT
     /// @param  bhpCopy The BlockHashProver copy on the local chain.
     /// @return bhpPointerId The ID of the BlockHashProverPointer
-    function updateBlockHashProverCopy(RemoteReadArgs calldata bhpPointerReadArgs, IBlockHashProver bhpCopy)
+    function updateBlockHashProverCopy(RemoteReadStorageSlotArgs calldata bhpPointerReadArgs, IBlockHashProver bhpCopy)
         external
         returns (bytes32 bhpPointerId);
 
@@ -448,9 +460,10 @@ contract Minter {
     }
 
     /// @notice Mint the tokens when a message is received.
-    function mintTokens(IReceiver.RemoteReadArgs calldata broadcasterReadArgs, BurnMessage calldata messageData)
-        external
-    {
+    function mintTokens(
+        IReceiver.RemoteReadStorageSlotArgs calldata broadcasterReadArgs,
+        BurnMessage calldata messageData
+    ) external {
         // calculate the message from the data
         bytes32 message = keccak256(abi.encode(messageData));
 
