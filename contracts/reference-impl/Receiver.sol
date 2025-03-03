@@ -92,8 +92,8 @@ contract Receiver is IReceiver {
         blockHashProverCopy[bhpPointerId] = bhpCopy;
     }
 
-    // todo: natspec
-    // we have an extra return value so the last prover can be used to verify the storage proof in verifyRemoteSlot
+    /// @dev Verify the block hash of a remote chain and return the last prover used to verify it.
+    ///      Returning the last prover is useful for verifying storage slots.
     function _verifyRemoteBlockHashInternal(RemoteReadBlockHashArgs calldata readArgs)
         internal
         view
