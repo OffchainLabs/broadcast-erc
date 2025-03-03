@@ -247,13 +247,17 @@ The calls in Figure 6 perform the following operations:
 ```solidity
 /// @notice Reads messages from a broadcaster.
 interface IReceiver {
-    // todo: natspec
+    /// @notice Arguments required to read and verify the block hash of a remote chain.
+    /// @param  route The home chain addresses of the BlockHashProverPointers along the route to the remote chain.
+    /// @param  bhpInputs The inputs to the BlockHashProver / BlockHashProverCopies.
     struct RemoteReadBlockHashArgs {
         address[] route;
         bytes[] bhpInputs;
     }
 
-    // todo: natspec
+    /// @notice Arguments required to read and verify a storage slot of an account on a remote chain.
+    /// @param  blockHashArgs The arguments required to read and verify the block hash of a remote chain.
+    /// @param  storageProof Proof passed to the last BlockHashProver / BlockHashProverCopy to verify a storage slot given a target block hash.
     struct RemoteReadStorageSlotArgs {
         RemoteReadBlockHashArgs blockHashArgs;
         bytes storageProof;
@@ -273,13 +277,23 @@ interface IReceiver {
         address publisher
     ) external view returns (bytes32 broadcasterId, uint256 timestamp);
 
-    // todo: natspec
+    /// @notice Reads a storage slot of an account on a remote chain.
+    /// @param  readArgs A RemoteReadStorageSlotArgs object:
+    ///         - The route points to the remote chain
+    ///         - The storage proof is for the desired slot
+    /// @return remoteAccountId The account ID of the remote account.
+    /// @return slot The slot number.
+    /// @return slotValue The value of the slot.
     function verifyRemoteSlot(RemoteReadStorageSlotArgs calldata readArgs)
         external
         view
         returns (bytes32 remoteAccountId, uint256 slot, bytes32 slotValue);
 
-    // todo: natspec
+    /// @notice Reads the block hash of a remote chain.
+    /// @param  readArgs A RemoteReadBlockHashArgs object:
+    ///         - The route points to the remote chain
+    /// @return routeId The ID of the last BlockHashProverPointer in the route.
+    /// @return blockHash The block hash of the remote chain.
     function verifyRemoteBlockHash(RemoteReadBlockHashArgs calldata readArgs)
         external
         view
