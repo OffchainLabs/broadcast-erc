@@ -80,7 +80,7 @@ interface IBroadcaster {
     /// @param  message The message to check.
     /// @param  publisher The address of the publisher.
     /// @return True if the message has been broadcast by the publisher, false otherwise.
-    function hasBroadcasted(bytes32 message, address publisher) external view returns (bool);
+    function hasBroadcast(bytes32 message, address publisher) external view returns (bool);
 }
 ```
 

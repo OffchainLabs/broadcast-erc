@@ -20,7 +20,7 @@ contract Broadcaster is IBroadcaster {
     }
 
     /// @inheritdoc IBroadcaster
-    function hasBroadcasted(bytes32 message, address publisher) external view returns (bool) {
+    function hasBroadcast(bytes32 message, address publisher) external view returns (bool) {
         return _sload(_messageSlot(message, publisher)) != 0;
     }
 
