@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.13;
+pragma solidity >=0.6.0 <0.9.0;
 
 import {IBlockHashProver} from "./IBlockHashProver.sol";
 

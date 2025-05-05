@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.13;
+pragma solidity >=0.6.0 <0.9.0;
 
 /// @title  IBlockHashProverPointer
 /// @notice Keeps the code hash of the latest version of a block hash prover.
