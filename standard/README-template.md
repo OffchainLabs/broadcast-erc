@@ -98,6 +98,8 @@ When updating a BlockHashProverPointer to point to a new BlockHashProver impleme
 
 BlockHashProverPointers MUST store the code hash of the BlockHashProver implementation in slot `BLOCK_HASH_PROVER_POINTER_SLOT`.
 
+BlockHashProverPointers MUST emit the `ProverUpdated` event when the prover is updated.
+
 <div align="center">
 <img src="../assets/erc-7888/pointer.svg" alt="Figure 3" style="width:30%"/>
 

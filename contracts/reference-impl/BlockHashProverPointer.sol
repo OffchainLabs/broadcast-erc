@@ -16,6 +16,7 @@ contract BlockHashProverPointer is IBlockHashProverPointer, Ownable {
     function setBHP(address bhp) external onlyOwner {
         implementationAddress = bhp;
         _storeCodeHash(bhp.codehash);
+        emit ProverUpdated(bhp);
     }
 
     /// @dev Return the code hash stored in BLOCK_HASH_PROVER_POINTER_SLOT.
