@@ -1,7 +1,7 @@
 ---
 eip: 7888
 title: Crosschain Broadcaster
-description: Trustless crosschain storage-based message broadcasting for rollups.
+description: Trustless storage-based message broadcasting for rollups.
 author: Henry Arneson (@godzillaba), Chris Buckland (@yahgwai)
 discussions-to: https://ethereum-magicians.org/t/new-erc-cross-chain-broadcaster/22927
 status: Draft
@@ -54,7 +54,7 @@ The Broadcaster does not accept duplicate messages from the same publisher.
 
 <div align="center">
 <img src="../assets/eip-7888/broadcasting.svg" alt="Figure 1" width="30%"/>
-
+<br/>
 *Figure 1: A Publisher at address 0x4 calling a Broadcaster at address 0x3*
 </div>
 
@@ -73,7 +73,7 @@ BlockHashProvers MUST ensure that they will have the same deployed code hash on 
 
 <div align="center">
 <img src="../assets/eip-7888/BHP.svg" alt="Figure 2" width="30%"/>
-
+<br/>
 *Figure 2: A `BlockHashProver` with home chain L and target chain M*
 </div>
 
@@ -97,7 +97,7 @@ BlockHashProverPointers MUST store the code hash of the BlockHashProver implemen
 
 <div align="center">
 <img src="../assets/eip-7888/pointer.svg" alt="Figure 3" width="30%"/>
-
+<br/>
 *Figure 3: A `BlockHashProverPointer` at address 0xA pointing to a `BlockHashProver` with home chain L and target chain M*
 </div>
 
@@ -115,7 +115,7 @@ A valid route MUST obey the following:
 
 <div align="center">
 <img src="../assets/eip-7888/route.svg" alt="Figure 4" width="80%"/>
-
+<br/>
 *Figure 4: A route [0xA, 0xB, 0xC] from chain L to chain R*<br/>
 *Chain L is an L2, Chain M is Ethereum Mainnet, Chain P is another L2, and Chain R is an L3 settling to Chain P* 
 </div>
@@ -148,7 +148,7 @@ BlockHashProverCopies are exact copies of BlockHashProvers deployed on non-home 
 
 <div align="center">
 <img src="../assets/eip-7888/BHPCopy.svg" alt="Figure 5" width="30%"/>
-
+<br/>
 *Figure 5: A BlockHashProverCopy of BlockHashProver M->P on chain L*
 </div>
 
@@ -158,7 +158,7 @@ The Receiver is responsible for verifying 32 byte messages deposited in Broadcas
 
 <div align="center">
 <img src="../assets/eip-7888/receiving.svg" alt="Figure 6" width="80%"/>
-
+<br/>
 *Figure 6: Example of a Receiver reading a message from a Broadcaster on chain R*
 </div>
 
