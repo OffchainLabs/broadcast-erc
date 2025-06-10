@@ -12,7 +12,11 @@ created: 2025-02-18
 
 ## Abstract
 
-This ERC defines a standardized protocol for cross-rollup message broadcasting and reception via storage proofs. Users can broadcast messages on a source chain, those messages can then be read by one or many other chains, as long as those chains share a common ancestor chain with the source chain. The standard enables trustless message passing across rollups hosted on different rollup architecture stacks.
+This ERC defines a protocol for cross-rollup messaging using storage proofs. Users can broadcast messages on a source chain, and those messages can be verified on any other chain that shares a common ancestor with the source chain.
+
+Each chain deploys a singleton Receiver and Broadcaster contract. Broadcasters store messages; Receivers verify the Broadcasters’ storage on remote chains. To do this, a Receiver first verifies a chain of storage proofs to recover a remote block hash, then verifies the Broadcaster’s storage at that block.
+
+Critically, the logic for verifying storage proofs is not hardcoded in the Receiver. Instead, it delegates this to a user specified list of BlockHashProver contracts. Each BlockHashProver defines how to verify a storage proof for a specific home chain to recover the block hash of a specific target chain. Because the storage layouts of rollup contracts can change over time, the storage proof verification process itself must also be upgradeable—hence the BlockHashProvers are upgradeable. This flexible, upgradeable proof verification model is the core contribution of this standard.
 
 ## Motivation
 
@@ -27,13 +31,6 @@ Many classes of applications could benefit from a unified system for broadcastin
 ## Specification
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
-
-### High Level
-There is a singleton Receiver and Broadcaster contract deployed to each chain. Broadcasters are responsible for storing messages. Receivers are responsible for verifying proofs of Broadcasters' storage on remote chains. 
-
-A Receiver learns about the contents of a Broadcaster on another chain by using storage proofs to unwrap a finalized block hash of the Broadcaster's chain. The Receiver verifies these finalized block hashes using storage proofs of the canonical bridges of these remote rollup chains. It can do this iteratively to learn about the contents of a Broadcaster that is many hops away from the Receiver, as long as the rollups share a common ancestor chain (like Ethereum).
-
-Two prominent issues with this approach are that it's inflexible and brittle. In practice, rollups have heterogenous architectures - they store finalized block hashes in different places in their rollup contracts making it difficult for a hard coded storage proof approach to support different locations of block hashes. In the same vein, rollups can upgrade their contracts and move the location of block hashes, breaking the ability of the Receiver to read from the Broadcaster. This proposal addresses these two issues by introducing 'Pointer' contracts that allow the rollup chain owners to dynamically update and set finalized block hash locations for their contracts.
 
 ### Compatibility Requirements
 
