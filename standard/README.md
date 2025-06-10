@@ -56,7 +56,7 @@ The Broadcaster is responsible for storing messages in state to be read by Recei
 The Broadcaster does not accept duplicate messages from the same publisher.
 
 <div align="center">
-<img src="../assets/erc-7888/broadcasting.svg" alt="Figure 1" style="width:30%"/>
+<img src="../assets/eip-7888/broadcasting.svg" alt="Figure 1" width="30%"/>
 
 *Figure 1: A Publisher at address 0x4 calling a Broadcaster at address 0x3*
 </div>
@@ -88,7 +88,7 @@ Since the BlockHashProvers are unidirectional, each type of chain needs to imple
 BlockHashProvers MUST ensure that they will have the same deployed code hash on all chains.
 
 <div align="center">
-<img src="../assets/erc-7888/BHP.svg" alt="Figure 2" style="width:30%"/>
+<img src="../assets/eip-7888/BHP.svg" alt="Figure 2" width="30%"/>
 
 *Figure 2: A `BlockHashProver` with home chain L and target chain M*
 </div>
@@ -158,7 +158,7 @@ When updating a BlockHashProverPointer to point to a new BlockHashProver impleme
 BlockHashProverPointers MUST store the code hash of the BlockHashProver implementation in slot `BLOCK_HASH_PROVER_POINTER_SLOT`.
 
 <div align="center">
-<img src="../assets/erc-7888/pointer.svg" alt="Figure 3" style="width:30%"/>
+<img src="../assets/eip-7888/pointer.svg" alt="Figure 3" width="30%"/>
 
 *Figure 3: A `BlockHashProverPointer` at address 0xA pointing to a `BlockHashProver` with home chain L and target chain M*
 </div>
@@ -188,7 +188,7 @@ A valid route MUST obey the following:
 - Target chain of the `route[i]` Pointer must equal home chain of the `route[i+1]` Pointer
 
 <div align="center">
-<img src="../assets/erc-7888/route.svg" alt="Figure 4" style="width:80%"/>
+<img src="../assets/eip-7888/route.svg" alt="Figure 4" width="80%"/>
 
 *Figure 4: A route [0xA, 0xB, 0xC] from chain L to chain R*<br/>
 *Chain L is an L2, Chain M is Ethereum Mainnet, Chain P is another L2, and Chain R is an L3 settling to Chain P* 
@@ -221,7 +221,7 @@ In Figure 4:
 BlockHashProverCopies are exact copies of BlockHashProvers deployed on non-home chains. When a BlockHashProver code hash is de-referenced from a Pointer, a copy of the BlockHashProver may be used to execute its logic. Since the Pointer references the prover by code hash, a local copy of the Prover can be deployed and used to execute specific proving logic. The Receiver caches a map of `mapping(bytes32 blockHashProverPointerId => IBlockHashProver blockHashProverCopy)` to keep track of BlockHashProverCopies. 
 
 <div align="center">
-<img src="../assets/erc-7888/BHPCopy.svg" alt="Figure 5" style="width:30%"/>
+<img src="../assets/eip-7888/BHPCopy.svg" alt="Figure 5" width="30%"/>
 
 *Figure 5: A BlockHashProverCopy of BlockHashProver M->P on chain L*
 </div>
@@ -231,7 +231,7 @@ BlockHashProverCopies are exact copies of BlockHashProvers deployed on non-home 
 The Receiver is responsible for verifying 32 byte messages deposited in Broadcasters on other chains. The caller provides the Receiver with a route to the remote account and proof to verify the route.
 
 <div align="center">
-<img src="../assets/erc-7888/receiving.svg" alt="Figure 6" style="width:80%"/>
+<img src="../assets/eip-7888/receiving.svg" alt="Figure 6" width="80%"/>
 
 *Figure 6: Example of a Receiver reading a message from a Broadcaster on chain R*
 </div>
@@ -298,7 +298,7 @@ interface IReceiver {
 
 A contract on any given chain cannot dictate which other chains can and cannot inspect its state. Contracts are naturally broadcasting their state to anything capable of reading it. Targeted messaging applications can always be built on top of a broadcast messaging system.
 
-See [Publisher and Subscriber Burn and Mint Bridge](#example-publisher-and-subscriber-burn-and-mint-bridge) for an example of a unicast application.
+See [Reference Implementation](#reference-implementation) for an example of a unicast application.
 
 ### Using Storage Proofs
 
@@ -345,31 +345,7 @@ Routes reference BlockHashProvers through Pointers rather than directly. This in
 #### BlockHashProverCopies
 Since BlockHashProverPointers reference BlockHashProvers via their code hash, a copy of the BlockHashProver can be deployed anywhere and reliably understood to contain the same code as that referenced by the Pointer. This allows the Receiver to locally use the code of a BlockHashProver whose home chain is a remote chain.
 
-## Security Considerations
-
-### Chain Upgrades
-If a chain upgrades such that a BlockHashProver's `verifyTargetBlockHash` or `getTargetBlockHash` functions might return data besides a finalized target block hash, then invalid messages could be read by a `Receiver`. For instance, if a chain stores its block hashes on the parent chain in a specific mapping, and that storage location is later repurposed, then an old BlockHashProver might be able to pass along an invalid block hash. It is therefore important that either:
-* the BlockHashProver is written in such a way to detect changes like this
-* the owner who is able to repurpose these storage locations is aware of the BlockHashProver and ensures they don't break it
-
-### BlockHashProverPointer Ownership / Updates
-A malicious BlockHashProverPointer owner can DoS or forge messages. However, so can the chain owner responsible for setting the location of historical parent/child block hashes. Therefore it is expected that this chain owner be the same as the owner of the BlockHashProverPointer so as not to introduce additional risks.
-
-* If the target chain of the referenced BlockHashProver is the parent chain, the home chain owner is expected to be the BlockHashProverPointer's owner.
-* If the target chain of the referenced BlockHashProver is the child chain, the target chain owner is expected to be the BlockHashProverPointer's owner.
-
-If an owner neglects their responsibility to update the Pointer with new BlockHashProver implementations when necessary, messages could fail to reach their destinations.
-
-If an owner maliciously updates a Pointer to point to a BlockHashProver that produces fraudulent results, messages can be forged.
-
-If there is confidence that a chain along the route connecting them will not upgrade to break a BlockHashProver, an unowned BlockHashProverPointer can be deployed in the absence of a properly owned one.
-
-### Message guarantees
-This ERC describes a protocol for ensuring that messages from remote chains CAN be read, but not that they WILL be read. It is the responsibility of the Receiver caller to choose which messages they wish to read.
-
-Since the ERC only uses finalized blocks, messages may take a long time to propagate between chains. Finalisation occurs sequentially in the route, therefore time to read a message is the sum of the finalisation of each of the block hashes at each step in the route.
-
-## Example: Publisher and Subscriber Burn and Mint Bridge
+## Reference Implementation
 
 The following is an example of a one-way crosschain token migrator. The burn side of the migrator is a publisher which sends burn messages through a Broadcaster. The mint side subscribes to these burn messages through a Receiver on another chain.
 
@@ -471,6 +447,30 @@ contract Minter {
     }
 }
 ```
+
+## Security Considerations
+
+### Chain Upgrades
+If a chain upgrades such that a BlockHashProver's `verifyTargetBlockHash` or `getTargetBlockHash` functions might return data besides a finalized target block hash, then invalid messages could be read by a `Receiver`. For instance, if a chain stores its block hashes on the parent chain in a specific mapping, and that storage location is later repurposed, then an old BlockHashProver might be able to pass along an invalid block hash. It is therefore important that either:
+* the BlockHashProver is written in such a way to detect changes like this
+* the owner who is able to repurpose these storage locations is aware of the BlockHashProver and ensures they don't break it
+
+### BlockHashProverPointer Ownership / Updates
+A malicious BlockHashProverPointer owner can DoS or forge messages. However, so can the chain owner responsible for setting the location of historical parent/child block hashes. Therefore it is expected that this chain owner be the same as the owner of the BlockHashProverPointer so as not to introduce additional risks.
+
+* If the target chain of the referenced BlockHashProver is the parent chain, the home chain owner is expected to be the BlockHashProverPointer's owner.
+* If the target chain of the referenced BlockHashProver is the child chain, the target chain owner is expected to be the BlockHashProverPointer's owner.
+
+If an owner neglects their responsibility to update the Pointer with new BlockHashProver implementations when necessary, messages could fail to reach their destinations.
+
+If an owner maliciously updates a Pointer to point to a BlockHashProver that produces fraudulent results, messages can be forged.
+
+If there is confidence that a chain along the route connecting them will not upgrade to break a BlockHashProver, an unowned BlockHashProverPointer can be deployed in the absence of a properly owned one.
+
+### Message guarantees
+This ERC describes a protocol for ensuring that messages from remote chains CAN be read, but not that they WILL be read. It is the responsibility of the Receiver caller to choose which messages they wish to read.
+
+Since the ERC only uses finalized blocks, messages may take a long time to propagate between chains. Finalisation occurs sequentially in the route, therefore time to read a message is the sum of the finalisation of each of the block hashes at each step in the route.
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE.md).
