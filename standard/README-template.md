@@ -190,6 +190,10 @@ Message reading uses storage proofs. An alternative to this would be to pass mes
 - Batching by default. Since storage slots share a common storage root, caching the storage root allows readers to open adjacent slots at lower cost. This provides a form of implicit batching, whereas canonical bridges would need to create a form of explicit batching.
 - If the common ancestor of the two chains is Ethereum, sending a message using the canonical bridges would require sending a transaction on Ethereum, which would likely incur a high cost.
 
+### No duplicate messages per publisher
+
+To allow publishers to send the same message multiple times, some kind of nonce system would need to exist in this ERC. Since nonces can be implemented at the Publisher / Subscriber layer, and not all Publishers / Subscribers require this feature, it is left out of this ERC.
+
 #### Cost Comparison
 Here we compare the cost of using storage proofs vs sending messages via the canonical bridge, where the parent chain is Ethereum. Here, we will only consider the cost of the L1 gas as we assume it to dominate the L2 gas costs.
 
