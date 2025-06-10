@@ -16,7 +16,7 @@ This ERC defines a protocol for cross-rollup messaging using storage proofs. Use
 
 Each chain deploys a singleton Receiver and Broadcaster contract. Broadcasters store messages; Receivers verify the Broadcasters’ storage on remote chains. To do this, a Receiver first verifies a chain of storage proofs to recover a remote block hash, then verifies the Broadcaster’s storage at that block.
 
-Critically, the logic for verifying storage proofs is not hardcoded in the Receiver. Instead, it delegates this to a user specified list of BlockHashProver contracts. Each BlockHashProver defines how to verify a storage proof for a specific home chain to recover the block hash of a specific target chain. Because the storage layouts of rollup contracts can change over time, the storage proof verification process itself must also be upgradeable—hence the BlockHashProvers are upgradeable. This flexible, upgradeable proof verification model is the core contribution of this standard.
+Critically, the logic for verifying storage proofs is not hardcoded in the Receiver. Instead, it delegates this to a user specified list of BlockHashProver contracts. Each BlockHashProver defines how to verify a storage proof for a specific home chain to recover the block hash of a specific target chain. Because the storage layouts of rollup contracts can change over time, the storage proof verification process itself must also be upgradeable&mdash;hence the BlockHashProvers are upgradeable. This flexible, upgradeable proof verification model is the core contribution of this standard.
 
 ## Motivation
 
@@ -78,7 +78,7 @@ interface IBroadcaster {
 ### BlockHashProvers
 BlockHashProvers prove a unidirectional link between two chains that have direct access to each other's finalized blocks. The chains in this link are called the **home chain** and the **target chain**. BlockHashProvers are responsible for verifying storage proofs to prove the existence of finalized target block hashes in the state of the home chain.
 
-Since the BlockHashProvers are unidirectional, each type of chain needs to implement two: 
+Since the BlockHashProvers are unidirectional, each chain needs to have two: 
 * One whose home is the child chain and target is the parent chan.
 * One whose home is the parent chain and target is the child chain.
 
