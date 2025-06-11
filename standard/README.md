@@ -154,6 +154,8 @@ When updating a BlockHashProverPointer to point to a new BlockHashProver impleme
 
 BlockHashProverPointers MUST store the code hash of the BlockHashProver implementation in slot `BLOCK_HASH_PROVER_POINTER_SLOT`.
 
+BlockHashProverPointers MUST emit the `ProverUpdated` event when the prover is updated.
+
 <div align="center">
 <img src="../assets/eip-7888/pointer.svg" alt="Figure 3" width="30%"/>
 <br/>
@@ -164,10 +166,15 @@ BlockHashProverPointers MUST store the code hash of the BlockHashProver implemen
 /// @title  IBlockHashProverPointer
 /// @notice Keeps the code hash of the latest version of a block hash prover.
 ///         MUST store the code hash in storage slot BLOCK_HASH_PROVER_POINTER_SLOT.
+///         MUST emit ProverUpdated when the prover is updated.
 ///         Different versions of the prover MUST have the same home and target chains.
 ///         If the pointer's prover is updated, the new prover MUST have a higher IBlockHashProver::version() than the old one.
 ///         These pointers are always referred to by their address on their home chain.
 interface IBlockHashProverPointer {
+    /// @notice Emitted when the prover is updated.
+    /// @param newProver The address of the new prover.
+    event ProverUpdated(address indexed newProver);
+
     /// @notice Return the code hash of the latest version of the prover.
     function implementationCodeHash() external view returns (bytes32);
 
