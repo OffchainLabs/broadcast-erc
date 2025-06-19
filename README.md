@@ -14,6 +14,8 @@ Contracts appearing in the standard text can be found in [`/contracts/standard/`
 
 A reference implementation of `IBroadcaster`, `IReceiver`, and `IBlockHashProverPointer` can be found in [`/contracts/reference-impl/`](/contracts/reference-impl/)
 
-A reference implementation of `IBlockHashProver` contracts for Arbitrum chains can be found in [OffchainLabs/arbitrum-block-hash-prover](https://github.com/OffchainLabs/arbitrum-block-hash-prover)
+A reference implementation of `IBlockHashProver` contracts for Arbitrum chains can be found at [OffchainLabs/arbitrum-block-hash-prover](https://github.com/OffchainLabs/arbitrum-block-hash-prover)
 
-A reference implementation of `IBlockHashProver` contracts for OP stack chains can be found in [OffchainLabs/op-block-hash-prover](https://github.com/OffchainLabs/op-block-hash-prover)
+A reference implementation of `IBlockHashProver` contracts for OP stack chains can be found at [OffchainLabs/op-block-hash-prover](https://github.com/OffchainLabs/op-block-hash-prover)
+
+A template repository for building `IBlockHashProver` contracts and associated tooling can be found at [OffchainLabs/block-hash-prover-template](https://github.com/OffchainLabs/block-hash-prover-template)
