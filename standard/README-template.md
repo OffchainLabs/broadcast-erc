@@ -156,6 +156,8 @@ BlockHashProverCopies are exact copies of BlockHashProvers deployed on non-home 
 
 The Receiver is responsible for verifying 32 byte messages deposited in Broadcasters on other chains. The caller provides the Receiver with a route to the remote account and proof to verify the route.
 
+In addition to verifying messages sent through Broadcaster contracts, the Receiver also provides functions to verify arbitrary remote storage slots and remote block hashes.
+
 <div align="center">
 <img src="../assets/eip-7888/receiving.svg" alt="Figure 6" width="80%"/>
 <br/>
